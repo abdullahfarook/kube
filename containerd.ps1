@@ -5,7 +5,7 @@ rm containerd-1.7.20-linux-amd64.tar.gz
 
 # download and extract cni plugins
 mkdir -p -m 755 /opt/cni/bin
-wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-arm64-v1.5.1.tgz
+wget https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz
 tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.5.1.tgz
 rm cni-plugins-linux-amd64-v1.5.1.tgz
 
