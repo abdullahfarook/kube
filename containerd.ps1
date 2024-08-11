@@ -1,6 +1,6 @@
 # download and extract containerd
 wget https://github.com/containerd/containerd/releases/download/v1.7.20/containerd-1.7.20-linux-amd64.tar.gz
-tar Cxzvf /usr/local containerd-1.7.29-linux-amd64.tar.gz
+tar Cxzvf /usr/local containerd-1.7.20-linux-amd64.tar.gz
 rm containerd-1.7.20-linux-amd64.tar.gz
 
 # download and extract cni plugins
