@@ -22,7 +22,9 @@ if ($existing -eq $false) {
     partprobe /dev/$partition
 }
 # mount the disk
-mkdir $path
+if (-not (Test-Path $path)) {
+    mkdir $path
+}
 mount /dev/$partition $path
 # add to fstab
 $uuid = blkid | grep -i $partition | ForEach-Object { $_ -split " " } | Where-Object { $_ -match "UUID" }
