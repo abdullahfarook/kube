@@ -33,4 +33,4 @@ if ($null -eq (grep -i $uuid /etc/fstab)) {
     Add-Content /etc/fstab "UUID=$uuid $path xfs defaults,nofail 1 2"
 }
 # verify the disk
-lsblk -o NAME, HCTL, SIZE, MOUNTPOINT | grep -i "sd"
+lsblk -o NAME,SIZE,MOUNTPOINT | grep -i "sd"
