@@ -1,4 +1,4 @@
-# wget -o - https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1 | sudo pwsh -c -  "Invoke-AttachDisk -size 32"
+# wget -O - https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1 | sudo pwsh -Command - "Invoke-AttachDisk -size 32"
 function Invoke-AttachDisk {
     param(
         [int]$size,
@@ -8,6 +8,10 @@ function Invoke-AttachDisk {
 
     # find disk which has same size
     $disk = lsblk -o NAME,HCTL,SIZE,MOUNTPOINT | grep -i "sd" | Where-Object { $_ -match "$size" }
+    if($null -eq $disk) {
+        Write-Error "No disk found with size $size"
+        return
+    }
     $disk = $disk -split " " | Where-Object { $_ -ne "" }
     $disk = $disk[0]
     $partition = $disk + "1"
