@@ -28,10 +28,9 @@ mount /dev/$partition $path
 $uuid = blkid | grep -i $partition | ForEach-Object { $_ -split " " } | Where-Object { $_ -match "UUID" }
 $uuid = $uuid -split "=" | Where-Object { $_ -ne "" }
 $uuid = $uuid[1]
-Add-Content /etc/fstab "UUID=$uuid $path xfs defaults,nofail 1 2"
+# if UUID exists in fstab, does not add
+if ($null -eq (grep -i $uuid /etc/fstab)) {
+    Add-Content /etc/fstab "UUID=$uuid $path xfs defaults,nofail 1 2"
+}
 # verify the disk
 lsblk -o NAME, HCTL, SIZE, MOUNTPOINT | grep -i "sd"
-sudo pwsh -c " iex '& { $(irm https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1) }' "
-powershell -c " iex '& { $(irm https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1) } RunJob' "
-
-sudo pwsh "iex (New-Object Net.WebClient).downloadString('https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1')"
