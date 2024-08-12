@@ -6,7 +6,7 @@ param (
 )
 
 # find disk which has same size
-$disk = lsblk -o NAME, HCTL, SIZE, MOUNTPOINT | grep -i "sd" | Where-Object { $_ -match "$size" }
+$disk = lsblk -o NAME,SIZE,MOUNTPOINT | grep -i "sd" | Where-Object { $_ -match "$size" }
 if ($null -eq $disk) {
     Write-Error "No disk found with size $size"
     return
