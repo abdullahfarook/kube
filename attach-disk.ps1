@@ -1,4 +1,4 @@
-# wget -o - https://raw.githubusercontent.com/ajeetraina/k3s-gitops/main/attach-disk.ps1 | sudo pwsh -c -  "Invoke-AttachDisk -size 32"
+# wget -o - https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1 | sudo pwsh -c -  "Invoke-AttachDisk -size 32"
 function Invoke-AttachDisk {
     param(
         [int]$size,
