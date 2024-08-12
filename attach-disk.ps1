@@ -1,6 +1,6 @@
-# sudo pwsh -Command "iex (iwr -Uri 'https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1' -UseBasicParsing); attach-disk.ps1 -size 32"
+# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1))) -size 32G'"
 param (
-    [int]$size,
+    [string]$size,
     [bool]$existing = $true,
     [string]$path = "/shared"
 )
