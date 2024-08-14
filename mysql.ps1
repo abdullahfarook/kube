@@ -2,7 +2,7 @@ Param(
     [string]$mysql_root_password,
     [string]$mysql_path = "/shared/mysql",
     [string]$mysql_version = "8.0.39",
-    [string]$join_network?,
+    [string]$join_network = "shared_network",
     [bool]$existing = $true,
     [string]$new_user = "user",
     [string]$new_password = "Pass"
