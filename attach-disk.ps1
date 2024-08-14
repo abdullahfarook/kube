@@ -32,7 +32,7 @@ $uuid = $uuid -split "=" | Where-Object { $_ -ne "" }
 $uuid = $uuid[1]
 # if UUID exists in fstab, does not add with new line at start
 if ($null -eq (grep -i $uuid /etc/fstab)) {
-    Add-Content /etc/fstab "UUID=$uuid   $path   xfs   defaults,nofail   1   2`n"
+    Add-Content /etc/fstab "UUID=$uuid   $path   xfs   defaults,nofail   1   2"
 }
 # verify the disk
 lsblk -o NAME,SIZE,MOUNTPOINT | grep -i "sd"
