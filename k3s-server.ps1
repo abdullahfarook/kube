@@ -15,7 +15,7 @@ param (
     [bool]$disableTraefik = $true,
     [bool]$taintServer = $true
 )
-# optional token
+# install k3s server
 $command = "curl -sfL https://get.k3s.io |"
 $command += " INSTALL_K3S_EXEC='--write-kubeconfig-mode 664 --tls-san $clusterIp'"
 $command += " INSTALL_K3S_CHANNEL=$channel sh -s - server"
@@ -33,8 +33,9 @@ $command += " --tls-san $clusterIp"
 echo $command
 iex $command
  
-# copy the token from k3s server at path and set it as environment variable named AGENT_TOKEN
-#/var/lib/rancher/k3s/server/agent-token
+# Getting the agent token
 $agentToken = cat -Path "/var/lib/rancher/k3s/server/agent-token"
+echo "Agent token: $agentToken"
 $env:AGENT_TOKEN = $agentToken
+
 return $agentToken
