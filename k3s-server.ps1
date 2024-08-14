@@ -5,15 +5,15 @@
 # --datastore-endpoint="mysql://<user>:<password>@tcp(<mysql ip>:3306)/k3s"
 
 param (
-    [string]$clusterIp,
-    [string]$mysqlIp,
-    [string]$mysqlUser,
-    [string]$mysqlPassword,
+    [string]$cluster_ip,
+    [string]$mysql_ip,
+    [string]$mysql_user,
+    [string]$mysql_password,
     [string]$token?,
     [string]$channel = "stable",
     [string]$version = "latest",
-    [bool]$disableTraefik = $true,
-    [bool]$taintServer = $true
+    [bool]$disable_traefik = $true,
+    [bool]$taint_server = $true
 )
 # install k3s server
 $command = "curl -sfL https://get.k3s.io |"
@@ -32,7 +32,16 @@ $command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp($mys
 $command += " --tls-san $clusterIp"
 echo $command
 iex $command
- 
+
+# setup credentials
+# goto /etc/rancher/k3s/k3s.yaml
+# print the content of the file but wrap text on
+cat /etc/rancher/k3s/k3s.yaml
+
+# if insecure connection, SSL certificate needs to be installed
+# goto /var/lib/rancher/k3s/server/tls/
+# download client-ca.crt and install
+
 # Getting the agent token
 $agentToken = cat -Path "/var/lib/rancher/k3s/server/agent-token"
 echo "Agent token: $agentToken"

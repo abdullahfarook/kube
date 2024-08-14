@@ -30,3 +30,4 @@ wget https://github.com/containerd/nerdctl/releases/download/v1.7.6/nerdctl-1.7.
 tar -zxf  nerdctl-1.7.6-linux-amd64.tar.gz nerdctl
 mv nerdctl /usr/local/bin
 rm nerdctl-1.7.6-linux-amd64.tar.gz
+nerdctl --version

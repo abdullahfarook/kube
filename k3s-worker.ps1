@@ -1,5 +1,5 @@
 param(
-    [string]$serverIp,
+    [string]$server_ip,
     [string]$token
 )
 # join the k3s cluster using agent token and master node ip
