@@ -31,4 +31,10 @@ if ($null -ne $token) {
 $command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp($mysqlIp:3306)/k3s'"
 $command += " --tls-san $clusterIp"
 echo $command
-Invoke-Expression $command
+iex $command
+ 
+# copy the token from k3s server at path and set it as environment variable named AGENT_TOKEN
+#/var/lib/rancher/k3s/server/agent-token
+$agentToken = cat -Path "/var/lib/rancher/k3s/server/agent-token"
+$env:AGENT_TOKEN = $agentToken
+return $agentToken
