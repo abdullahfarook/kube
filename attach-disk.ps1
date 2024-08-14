@@ -30,9 +30,9 @@ mount /dev/$partition $path
 $uuid = blkid | grep -i $partition | ForEach-Object { $_ -split " " } | Where-Object { $_ -match "UUID" }
 $uuid = $uuid -split "=" | Where-Object { $_ -ne "" }
 $uuid = $uuid[1]
-# if UUID exists in fstab, does not add
+# if UUID exists in fstab, does not add with new line at start
 if ($null -eq (grep -i $uuid /etc/fstab)) {
-    Add-Content /etc/fstab "UUID=$uuid   $path   xfs   defaults,nofail   1   2"
+    Add-Content /etc/fstab "UUID=$uuid   $path   xfs   defaults,nofail   1   2`n"
 }
 # verify the disk
 lsblk -o NAME,SIZE,MOUNTPOINT | grep -i "sd"
