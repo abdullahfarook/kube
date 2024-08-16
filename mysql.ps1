@@ -12,7 +12,9 @@ Param(
 Write-Host "Starting MySQL setup script..."
 
 $compose = @"
-mysql:
+version: '3.0'
+services:
+  mysql:
     image: mysql/mysql-server:${mysqlVersion}
     container_name: mysql
     volumes:
