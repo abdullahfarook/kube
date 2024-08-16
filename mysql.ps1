@@ -2,7 +2,7 @@
 Param(
     [string]$mysql_root_password,
     [string]$mysql_path = "/shared/mysql",
-    [string]$mysql_version = "8.0.39",
+    [string]$mysql_version = "latest",
     [string]$join_network,
     [bool]$existing = $true,
     [string]$new_user,
@@ -27,6 +27,10 @@ services:
       MYSQL_ROOT_PASSWORD: $mysql_root_password
 "@
 $file = "mysql-compose.yml"
+# remove existing file
+if (Test-Path $file) {
+    Remove-Item $file
+}
 $compose | Out-File -FilePath $file -Force
 Write-Host "Docker Compose file created at $file"
 
