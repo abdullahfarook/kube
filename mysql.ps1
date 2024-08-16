@@ -10,21 +10,21 @@ Param(
 )
 
 Write-Host "Starting MySQL setup script..."
-
 $compose = @"
-version: '3.0'
+version: '3'
 services:
   mysql:
-    image: mysql/mysql-server:${mysqlVersion}
+    image: mysql/mysql-server:$mysql_version
     container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - ${mysqlPath}/data:/var/lib/mysql
-      - ${mysqlPath}/conf.d:/etc/mysql/conf.d
+      - $mysql_path/data:/var/lib/mysql
+      - $mysql_path/conf.d:/etc/mysql/conf.d
     restart: always
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: ${mysqlRootPassword}
+      MYSQL_ROOT_PASSWORD: $mysql_root_password
 "@
 $file = "mysql-compose.yml"
 $compose | Out-File -FilePath $file -Force
