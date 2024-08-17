@@ -1,7 +1,8 @@
-# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/k3s-server.ps1).Content))' -cluster_ip <cluster_ip> -mysql_ip <mysql_ip> -mysql_user <mysql_user> -mysql_password <mysql_password> -token <token>'"
+# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/k3s-server.ps1).Content))' -cluster_ip <cluster_ip> -mysql_ip <mysql_ip> -mysql_user <mysql_user> -mysql_password <mysql_password> -token <token>'" 
 param (
     [string]$cluster_ip,
     [string]$mysql_ip,
+    [string]$mysql_port = "3306",
     [string]$mysql_user,
     [string]$mysql_password,
     [string]$token?,
@@ -23,7 +24,7 @@ if ($disableTraefik -eq $true) {
 if ($null -ne $token) {
     $command += " --token $token"
 }
-$command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp($mysqlIp:3306)/k3s'"
+$command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp(${mysqlIp}:${mysql_port})/k3s'"
 $command += " --tls-san $clusterIp"
 echo $command
 iex $command
