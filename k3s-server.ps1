@@ -14,8 +14,14 @@ param (
     [string]$channel = "stable",
     [string]$version = "latest",
     [bool]$disable_traefik = $true,
-    [bool]$taint_server = $true
+    [bool]$taint_server = $true,
+    [bool]$uninstall = $false
 )
+if ($uninstall -eq $true) {
+    Write-Host "Uninstalling k3s server"
+    /usr/local/bin/k3s-uninstall.sh
+    exit 0
+}
 # install k3s server
 $command = @"
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 664 --tls-san $cluster_ip" INSTALL_K3S_CHANNEL=$channel \sh -s - server
