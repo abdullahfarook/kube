@@ -4,8 +4,13 @@ param(
     [string]$uninstall = $false
 )
 if ($uninstall -eq $true) {
-    Write-Host "Uninstalling k3s worker"
-    /usr/local/bin/k3s-agent-uninstall.sh
+    if (Test-Path /usr/local/bin/k3s-agent-uninstall.sh) {
+        echo "Uninstalling k3s worker"
+        /usr/local/bin/k3s-agent-uninstall.sh
+    }
+    else {
+        Write-Error "k3s-agent-uninstall.sh not found"
+    }
     exit 0
 }
 # join the k3s cluster using agent token and master node ip

@@ -18,8 +18,14 @@ param (
     [bool]$uninstall = $false
 )
 if ($uninstall -eq $true) {
-    Write-Host "Uninstalling k3s server"
-    /usr/local/bin/k3s-uninstall.sh
+    # if file exists, execute the uninstall script
+    if (Test-Path /usr/local/bin/k3s-uninstall.sh) {
+        echo "Uninstalling k3s server"
+        /usr/local/bin/k3s-uninstall.sh
+    }
+    else {
+        Write-Error "k3s-uninstall.sh not found"
+    }
     exit 0
 }
 # install k3s server
