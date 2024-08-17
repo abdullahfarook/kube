@@ -24,7 +24,7 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: $mysql_root_password
+      MYSQL_ROOT_PASSWORD: '$mysql_root_password'
 "@
 $file = "mysql-compose.yml"
 # remove existing file
