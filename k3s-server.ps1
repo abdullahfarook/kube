@@ -1,7 +1,7 @@
-# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/k3s-server.ps1).Content))' -cluster_ip <cluster_ip> -mysql_ip <mysql_ip> -mysql_user <mysql_user> -mysql_password <mysql_password> -token <token>'" 
+# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/k3s-server.ps1).Content)) -cluster_ip <cluster_ip> -mysql_ip <mysql_ip> -mysql_user <mysql_user> -mysql_password <mysql_password> -token <token>'" 
 param (
     [string]$cluster_ip,
-    [string]$mysql_ip,
+    [string]$mysql_ip = "localhost",
     [string]$mysql_port = "3306",
     [string]$mysql_user,
     [string]$mysql_password,
@@ -12,9 +12,9 @@ param (
     [bool]$taint_server = $true
 )
 # install k3s server
-$command = "curl -sfL https://get.k3s.io |"
-$command += " INSTALL_K3S_EXEC='--write-kubeconfig-mode 664 --tls-san $clusterIp'"
-$command += " INSTALL_K3S_CHANNEL=$channel sh -s - server"
+$commanmd = @"
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC='--write-kubeconfig-mode 664 --tls-san $cluster_ip' INSTALL_K3S_CHANNEL=$channel sh -s - server
+"@
 if ($taintServer -eq $true) {
     $command += " --node-taint CriticalAddonsOnly=true:NoExecute"
 }
@@ -25,7 +25,6 @@ if ($null -ne $token) {
     $command += " --token $token"
 }
 $command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp(${mysqlIp}:${mysql_port})/k3s'"
-$command += " --tls-san $clusterIp"
 echo $command
 iex $command
 if (-not $?) {
