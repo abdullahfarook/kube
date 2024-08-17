@@ -28,7 +28,10 @@ $command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp(${my
 $command += " --tls-san $clusterIp"
 echo $command
 iex $command
-
+if (-not $?) {
+    Write-Error "Failed to install k3s server: $_"
+    exit 1
+}
 # setup credentials
 # goto /etc/rancher/k3s/k3s.yaml
 # print the content of the file but wrap text on
