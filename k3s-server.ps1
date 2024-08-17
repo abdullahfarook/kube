@@ -33,7 +33,8 @@ if ($null -ne $token) {
 $command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp(${mysqlIp}:${mysql_port})/k3s'"
 
 Write-Host "Executing command: $command"
-iex $command
+# execute the command in bash
+bash -c $command
 if (-not $?) {
     Write-Error "Failed to install k3s server: $_"
     exit 1
