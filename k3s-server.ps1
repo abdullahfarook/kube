@@ -42,7 +42,7 @@ if ($disableTraefik -eq $true) {
 if ($null -ne $token) {
     $command += " --token $token"
 }
-$command += " --datastore-endpoint='mysql://${mysqlUser}:$mysqlPassword@tcp(${mysql_ip}:${mysql_port})/k3s'"
+$command += " --datastore-endpoint='mysql://${mysql_user}:$mysql_password@tcp(${mysql_ip}:${mysql_port})/k3s'"
 
 Write-Host "Executing command: $command"
 # execute the command in bash
