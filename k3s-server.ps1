@@ -6,7 +6,7 @@
 # --datastore-endpoint="mysql://<user>:<password>@tcp(<mysql ip>:3306)/k3s"
 param (
     [string]$cluster_ip,
-    [string]$mysql_ip = "localhost",
+    [string]$mysql_ip = "127.0.0.1",
     [string]$mysql_port = "3306",
     [string]$mysql_user,
     [string]$mysql_password,
