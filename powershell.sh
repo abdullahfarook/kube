@@ -1,4 +1,4 @@
-
+# wget -O - https://raw.githubusercontent.com/abdullahfarook/kube/main/powershell.sh | sudo bash 
 # Download the PowerShell package file
 wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.4/powershell_7.4.4-1.deb_amd64.deb
 
