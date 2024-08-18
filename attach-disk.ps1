@@ -1,5 +1,7 @@
 # sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/attach-disk.ps1))) -size 32G'"
-# sudo scp -i kube-control-kp.pem everything.zip  metadmin@<vm ip>:/home/metadmin/
+# copy content from old vm to new vm
+# chmod 400 my-key.pem
+# sudo scp -i my-key.pem everything.zip  metadmin@<vm ip>:/home/metadmin/
 param (
     [string]$size,
     [bool]$existing = $true,
