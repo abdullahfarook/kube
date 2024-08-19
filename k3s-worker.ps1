@@ -34,6 +34,10 @@ if (-not $?) {
 # verify the cluster
 Write-Output "Verifying the cluster..."
 kubectl get nodes
+if (-not $?) {
+    Write-Error "Failed to verify the cluster: $_"
+    exit 1
+}
 
 # open firewall ports
 $command = "iex '& ([scriptblock]::Create((iwr $firewall_script)))'"
