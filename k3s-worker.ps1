@@ -1,7 +1,7 @@
 # sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/k3s-worker.ps1))) -server_ip <master node ip> -token <agent token> -attach_disk $true -size 32G"'"
 param(
-    [Required][string]$server_ip,
-    [Required][string]$token,
+    [Parameter(Mandatory)][string]$server_ip,
+    [Parameter(Mandatory)][string]$token,
     [string]$uninstall = $false,
     [bool]$attach_disk = $false,
     [string]$size,
