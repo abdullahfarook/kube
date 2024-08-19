@@ -2,7 +2,7 @@
 param(
     [Parameter(Mandatory)][string]$server_ip,
     [Parameter(Mandatory)][string]$token,
-    [string]$uninstall = $false,
+    [bool]$uninstall = $false,
     [bool]$attach_disk = $false,
     [string]$size,
     [string]$firewall_script = "https://raw.githubusercontent.com/abdullahfarook/kube/main/firewalls.ps1",
