@@ -24,7 +24,7 @@ if ($uninstall -eq $true) {
 }
 
 # join the k3s cluster using agent token and master node ip
-$command = "curl -sfL https://get.k3s.io | K3S_URL=https://$server_ip:6443 K3S_TOKEN=$token sh -"
+$command = "curl -sfL https://get.k3s.io | K3S_URL=https://$($server_ip):6443 K3S_TOKEN=$token sh -"
 Write-Output "Joining the k3s cluster with command: $command"
 iex $command
 
