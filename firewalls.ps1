@@ -11,7 +11,5 @@ firewall-cmd --zone=public --add-port=5001/tcp --permanent  `
 firewall-cmd --zone=public --add-port=6443/tcp --permanent `
 firewall-cmd --zone=public --add-port=80/tcp --permanent `
 firewall-cmd --zone=public --add-port=80/udp --permanent `
-firewall-cmd --zone=public --add-port=443/tcp --permanent `
-firewall-cmd --zone=public --add-port=443/udo --permanent `
 firewall-cmd --reload
 echo "Firewall configured successfully"
