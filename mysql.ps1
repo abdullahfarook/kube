@@ -1,6 +1,6 @@
 # sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/mysql.ps1))) -mysql_root_password <password> '"
 Param(
-    [string]$mysql_root_password,
+    [Parameter(Mandatory)][string]$mysql_root_password,
     [string]$mysql_path = "/shared/mysql",
     [string]$mysql_version = "latest",
     [string]$join_network,
@@ -65,7 +65,7 @@ if ($existing -eq $false) {
 CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;
 "@
     $command = "nerdctl exec mysql mysql -u root -p$mysql_root_password -e `"$query`""
-    $command
+    & {$command}
     Write-Host "New MySQL user $new_user created successfully."
 }
 

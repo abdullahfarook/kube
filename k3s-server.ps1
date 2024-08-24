@@ -5,11 +5,11 @@
 # --node-taint CriticalAddonsOnly=true:NoExecute --disable traefik --token <token> \
 # --datastore-endpoint="mysql://<user>:<password>@tcp(<mysql ip>:3306)/k3s"
 param (
-    [string]$cluster_ip,
+    [Parameter(Mandatory)][string]$cluster_ip,
     [string]$mysql_ip = "127.0.0.1",
     [string]$mysql_port = "3306",
-    [string]$mysql_user,
-    [string]$mysql_password,
+    [Parameter(Mandatory)][string]$mysql_user,
+    [Parameter(Mandatory)][string]$mysql_password,
     [string]$token?,
     [string]$channel = "stable",
     [string]$version = "latest",
