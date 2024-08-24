@@ -61,11 +61,12 @@ if ($existing -eq $false) {
     }
     Write-Host "Creating new MySQL user $new_user..."
     $command = @"
+SHOW DATABASES;    
 CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';
 GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';
 FLUSH PRIVILEGES;
 "@
-    $command = "nerdctl exec mysql mysql -u root -p$mysql_root_password -e ""$command"" "
+    $command = "nerdctl exec mysql 'mysql -u root -p$mysql_root_password -e ""$command""' "
     Write-Host "Executing command: $command"
     bash -c $command
     Start-Sleep -s 1
