@@ -62,7 +62,7 @@ if ($existing -eq $false) {
     }
     Write-Host "Creating new MySQL user $new_user..."
     nerdctl exec -i mysql bash -c @"
-mysql -h 127.0.0.1 -u root -p$mysql_root_password <<< "show databases;"
+mysql -h localhost -u root -p$mysql_root_password <<< "show databases;"
 "@
     Write-Host "New MySQL user $new_user created successfully."
 }
