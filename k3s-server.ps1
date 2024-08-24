@@ -13,8 +13,8 @@ param (
     [string]$token?,
     [string]$channel = "stable",
     [string]$version = "latest",
-    [bool]$disable_traefik = $true,
-    [bool]$taint_server = $true,
+    [bool]$disable_traefik = $false,
+    [bool]$taint_server = $false,
     [bool]$uninstall = $false
 )
 if ($uninstall -eq $true) {

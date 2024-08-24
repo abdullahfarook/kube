@@ -1,4 +1,4 @@
-# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/mysql.ps1))) -mysql_root_password 'password' "
+# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/mysql.ps1))) -mysql_root_password <password> '"
 Param(
     [string]$mysql_root_password,
     [string]$mysql_path = "/shared/mysql",
@@ -54,18 +54,18 @@ if ($null -ne $joinNetwork) {
 # create user and database
 if ($existing -eq $false) { 
     # check for arguments new_user and new_password
-    if ($null -eq $newUser -or $null -eq $newPassword) {
+    if ($null -eq $new_user -or $null -eq $new_password) {
         Write-Error "new_user and new_password must be provided if provided argument 'existing' is false"
         exit 1
     }
-    Write-Host "Creating new MySQL user $newUser..."
+    Write-Host "Creating new MySQL user $new_user..."
     $command = @"
-CREATE USER '$newUser'@'%' IDENTIFIED WITH mysql_native_password BY '$newPassword';
-GRANT ALL PRIVILEGES ON *.* TO '$newUser'@'%';
+CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';
+GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';
 FLUSH PRIVILEGES;
 "@
     nerdctl exec mysql mysql -u root -p$mysqlRootPassword -e $command
-    Write-Host "New MySQL user $newUser created successfully."
+    Write-Host "New MySQL user $new_user created successfully."
 }
 
 Write-Host "MySQL setup script completed."

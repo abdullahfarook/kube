@@ -1,3 +1,4 @@
+# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/nerdctl.ps1)))'"
 # download and extract containerd
 echo "Installing containerd..."
 wget https://github.com/containerd/containerd/releases/download/v1.7.20/containerd-1.7.20-linux-amd64.tar.gz
@@ -39,4 +40,5 @@ nerdctl --version
 
 # download and install iptables
 echo "Installing iptables..."
+apt update
 apt install -y iptables
