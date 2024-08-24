@@ -65,7 +65,9 @@ CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_passw
 GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';
 FLUSH PRIVILEGES;
 "@
-    nerdctl exec mysql mysql -u root -p$mysql_root_password -e "'$command'"
+    $command = "nerdctl exec mysql mysql -u root -p$mysql_root_password -e '$command'"
+    Write-Host "Executing command: $command"
+    bash -c $command
     Write-Host "New MySQL user $new_user created successfully."
 }
 
