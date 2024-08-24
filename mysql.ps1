@@ -1,12 +1,12 @@
 # sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/mysql.ps1))) -mysql_root_password <password> '"
 Param(
-    [SecureString]$mysql_root_password,
+    [string]$mysql_root_password,
     [string]$mysql_path = "/shared/mysql",
     [string]$mysql_version = "latest",
     [string]$join_network,
     [bool]$existing = $true,
     [string]$new_user,
-    [SecureString]$new_password
+    [string]$new_password
 )
 
 Write-Host "Starting MySQL setup script..."
