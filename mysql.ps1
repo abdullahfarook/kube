@@ -67,8 +67,16 @@ FLUSH PRIVILEGES;
 "@
     $command = "nerdctl exec mysql mysql -u root -p$mysql_root_password -e ""$command"" "
     Write-Host "Executing command: $command"
-    bash -c $command
-    Write-Host "New MySQL user $new_user created successfully."
+    # Execute the command and capture the output and error
+    $output = bash -c $command 2>&1
+    
+    # Check if the command was successful
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "New MySQL user $new_user created successfully."
+    } else {
+        Write-Host "Failed to create MySQL user $new_user. Error: $output"
+    }
+        Write-Host "New MySQL user $new_user created successfully."
 }
 
 Write-Host "MySQL setup script completed."
