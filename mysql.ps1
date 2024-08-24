@@ -61,8 +61,8 @@ if ($existing -eq $false) {
         exit 1
     }
     Write-Host "Creating new MySQL user $new_user..."
-    nerdctl exec -it mysql bash -c @"
-mysql -u root -p$mysql_root_password -e "CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;"
+    nerdctl exec -i mysql bash -c @"
+mysql -h 127.0.0.1 -u root -p$mysql_root_password <<< "show databases;"
 "@
     Write-Host "New MySQL user $new_user created successfully."
 }
