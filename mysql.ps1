@@ -64,7 +64,14 @@ if ($existing -eq $false) {
     nerdctl exec -i mysql bash -c @"
 mysql -h localhost -P 3306 -u root -p$mysql_root_password <<< "show databases;"
 "@
-    Write-Host "New MySQL user $new_user created successfully."
+    if ($_ -ne 0) {
+        Write-Error "Failed to connect to MySQL server. Exiting..."
+        exit 1
+    }
+    else {
+        
+        Write-Host "New MySQL user $new_user created successfully."
+    }
 }
 
 Write-Host "MySQL setup script completed."
