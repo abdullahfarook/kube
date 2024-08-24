@@ -65,7 +65,6 @@ if ($existing -eq $false) {
 CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;
 "@
     $command = "nerdctl exec mysql mysql -u root -p$mysql_root_password -e `"$query`""
-    Write-Host "Executing command: $command"
     $command
     Write-Host "New MySQL user $new_user created successfully."
 }
