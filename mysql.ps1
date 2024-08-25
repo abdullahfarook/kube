@@ -74,6 +74,7 @@ if ($existing -eq $false) {
     chmod +x $file
     Write-Host "Executing MySQL command..."
     sudo bash $file
+    wait
     if($_) {
         Write-Error "Failed to create new MySQL user:`n$_"
         exit 1
