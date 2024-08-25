@@ -69,6 +69,7 @@ if ($existing -eq $false) {
         Remove-Item $file
     }
     $command | Out-File -FilePath $file -Force
+    chmod +x $file
     Write-Host "Executing MySQL command..."
     sudo bash $file
     if($_) {
