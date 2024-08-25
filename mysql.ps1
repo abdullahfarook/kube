@@ -65,16 +65,7 @@ if ($existing -eq $false) {
     $command = "sudo nerdctl exec mysql mysql -u root -p$mysql_root_password -e `"$query`""
     # wait for the command to finish
     $command += " && wait"
-# fill content of file in bash and execute
-    $file = "mysql-new-user.sh"
-    if(Test-Path $file) {
-        Remove-Item $file
-    }
-    $command | Out-File -FilePath $file -Force
-    chmod +x $file
-    Write-Host "Executing MySQL command..."
-    sudo bash $file
-    wait
+    bash -c $command
     if($_) {
         Write-Error "Failed to create new MySQL user:`n$_"
         exit 1
