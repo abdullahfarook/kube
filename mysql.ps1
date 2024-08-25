@@ -62,7 +62,9 @@ if ($existing -eq $false) {
     }
     Write-Host "Creating new MySQL user $new_user..."
     $query = "CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;"
-    $command = "nerdctl exec mysql mysql -u root -p$mysql_root_password -e `"$query`""
+    $command = "sudo nerdctl exec mysql mysql -u root -p$mysql_root_password -e `"$query`""
+    # wait for the command to finish
+    $command += " && wait"
 # fill content of file in bash and execute
     $file = "mysql-new-user.sh"
     if(Test-Path $file) {
