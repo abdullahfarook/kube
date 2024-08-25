@@ -61,8 +61,9 @@ if ($existing -eq $false) {
         exit 1
     }
     Write-Host "Creating new MySQL user $new_user..."
+     "CREATE USER 'user'@'%' IDENTIFIED WITH mysql_native_password BY 'P@ssword786';GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';FLUSH PRIVILEGES;"
     nerdctl exec -i mysql bash -c @"
-mysql -h localhost -P 3306 -u root -p$mysql_root_password <<< "show databases;"
+mysql -h localhost -P 3306 -u root -p$mysql_root_password -e "CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;"
 "@
     if ($_ -ne 0) {
         Write-Error "Failed to connect to MySQL server. Exiting..."
