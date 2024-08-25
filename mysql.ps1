@@ -61,12 +61,13 @@ if ($existing -eq $false) {
         exit 1
     }
     Write-Host "Creating new MySQL user $new_user..."
-    $command = @"
-mysql -h localhost -P 3306 -u root -p$mysql_root_password -e "CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;"
-"@
-    $command = "nerdctl exec mysql bash -c `"$command`""
+    $query = "CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;"
+    $command = "nerdctl exec mysql mysql -u root -p$mysql_root_password -e `"$query`""
 # fill content of file in bash and execute
     $file = "mysql-new-user.sh"
+    if(Test-Path $file) {
+        Remove-Item $file
+    }
     $command | Out-File -FilePath $file -Force
     Write-Host "Executing MySQL command..."
     $exitCode = bash -c "bash $file"
