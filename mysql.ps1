@@ -70,14 +70,10 @@ if ($existing -eq $false) {
     }
     $command | Out-File -FilePath $file -Force
     Write-Host "Executing MySQL command..."
-    $exitCode = bash -c "bash $file"
-    if ($exitCode -ne 0) {
-        Write-Error "Failed to create new MySQL user $new_user"
+    sudo bash $file
+    if($_) {
+        Write-Error "Failed to create new MySQL user:`n$_"
         exit 1
-    }
-    else {
-        
-        Write-Host "New MySQL user $new_user created successfully."
     }
 }
 
