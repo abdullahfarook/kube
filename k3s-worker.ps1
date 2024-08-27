@@ -44,7 +44,7 @@ if ($uninstall -eq $true) {
 # join the k3s cluster using agent token and master node ip
 $command = "curl -sfL https://get.k3s.io | K3S_URL=https://$($server_ip):6443 K3S_TOKEN=$token sh -"
 Write-Log "Joining the k3s cluster with command: $command"
-Invoke-Expression $command
+bash -c $command
 if (-not $?) {
     Write-Err "Failed to join the k3s cluster: $_"
     exit 1
@@ -60,13 +60,13 @@ if (-not $?) {
 # open firewall ports
 $command = "iex '& ([scriptblock]::Create((iwr $firewall_script)))'"
 Write-Log "Opening firewall ports with command: $command"
-Invoke-Expression $command
+iex $command
 
 # attach disk
 if ($attach_disk -eq $true) {
     $command = "iex '& ([scriptblock]::Create((iwr $attach_disk_script))) -size $size'"
     Write-Log "Attaching disk with command: $command"
-    Invoke-Expression $command
+    iex $command
 }
 
 Write-Log "k3s worker script completed."
