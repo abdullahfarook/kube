@@ -56,7 +56,6 @@ else
 # echo $serviceFileContent
 # Write the modified content back to the service file
 $serviceFileContent | Out-File -FilePath $serviceFilePath -Force
-Write-Log "File Content after modification: $(Get-Content -Path $serviceFilePath -Raw)"
 # Reload the systemd daemon
 Start-Process -NoNewWindow -FilePath "sudo" -ArgumentList "systemctl daemon-reload" -Wait
 Write-Log "Systemd daemon reloaded successfully"
