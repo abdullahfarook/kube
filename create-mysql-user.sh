@@ -78,7 +78,7 @@
 # Write-Host "MySQL setup script completed."
 
 # capture username and password
-root_password=$1
-new_user=$2
-new_password=$3
-nerdctl 
+# root_password=$1
+# new_user=$2
+# new_password=$3
+# nerdctl 

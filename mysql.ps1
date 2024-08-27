@@ -8,8 +8,26 @@ Param(
     [string]$new_user,
     [string]$new_password
 )
-
-Write-Host "Starting MySQL setup script..."
+function Write-Log {
+  param (
+      [string]$message,
+      [string]$level = "INFO"
+  )
+  $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+  if ($level -eq "ERR") {
+      Write-Err "$timestamp [$level] $message"
+  }else{
+      Write-Output "$timestamp [$level] $message"
+  }
+}
+function Write-Err {
+  param (
+      [string]$message
+  )
+  Write-Log $message "ERR"
+  exit 1
+}
+Write-Log "Starting MySQL setup script..."
 $compose = @"
 version: '3'
 services:
@@ -32,44 +50,40 @@ if (Test-Path $file) {
     Remove-Item $file
 }
 $compose | Out-File -FilePath $file -Force
-Write-Host "Docker Compose file created at $file"
+Write-Log "Docker Compose file created at $file"
 
 try {
-    Write-Host "Starting MySQL container..."
+    Write-Log "Starting MySQL container..."
     nerdctl compose -f $file up -d
-    Write-Host "MySQL container started successfully."
+    Write-Log "MySQL container started successfully."
 }
 catch {
-    Write-Error "Failed to start MySQL container:`n$_"
+    Write-Err "Failed to start MySQL container:`n$_"
     exit 1
 }
 rm $file
 
 # join network
 if ($null -ne $joinNetwork) {
-    Write-Host "Creating and connecting to network $joinNetwork..."
+    Write-Log "Creating and connecting to network $joinNetwork..."
     nerdctl network create $joinNetwork
     nerdctl network connect $joinNetwork mysql
-    Write-Host "Network $joinNetwork created and connected successfully."
+    Write-Log "Network $joinNetwork created and connected successfully."
 }
 
 # create user and database
-if ($existing -eq $false) { 
-    # check for arguments new_user and new_password
-    if ($null -eq $new_user -or $null -eq $new_password) {
-        Write-Error "new_user and new_password must be provided if provided argument 'existing' is false"
-        exit 1
-    }
-    Write-Host "Creating new MySQL user $new_user..."
-    $query = "CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;"
-    $command = "sudo nerdctl exec mysql mysql -u root -p$mysql_root_password -e `"$query`""
-    # wait for the command to finish
-    $command += " && wait"
-    bash -c $command
-    if($_) {
-        Write-Error "Failed to create new MySQL user:`n$_"
-        exit 1
-    }
-}
+if ($existing -eq $true) { return }
 
-Write-Host "MySQL setup script completed."
+# check for arguments new_user and new_password
+if ($null -eq $new_user -or $null -eq $new_password) {
+    Write-Err "new_user and new_password must be provided if provided argument 'existing' is false"
+    exit 1
+}
+Write-Log "Creating new MySQL user $new_user..."
+$query = "CREATE USER '$new_user'@'%' IDENTIFIED WITH mysql_native_password BY '$new_password';GRANT ALL PRIVILEGES ON *.* TO '$new_user'@'%';FLUSH PRIVILEGES;"
+nerdctl exec mysql mysql -u root -p$mysql_root_password -e "$query"
+if ($_) {
+    Write-Err "Failed to create new MySQL user:`n$_"
+    exit 1
+}
+Write-Log "MySQL setup script completed."

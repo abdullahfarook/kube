@@ -17,14 +17,33 @@ param (
     [bool]$taint_server = $false,
     [bool]$uninstall = $false
 )
+function Write-Log {
+    param (
+        [string]$message,
+        [string]$level = "INFO"
+    )
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    if ($level -eq "ERR") {
+        Write-Err "$timestamp [$level] $message"
+    }else{
+        Write-Output "$timestamp [$level] $message"
+    }
+}
+function Write-Err {
+    param (
+        [string]$message
+    )
+    Write-Log $message "ERR"
+    exit 1
+}
 if ($uninstall -eq $true) {
     # if file exists, execute the uninstall script
     if (Test-Path /usr/local/bin/k3s-uninstall.sh) {
-        echo "Uninstalling k3s server"
+        Write-Log "Uninstalling k3s server"
         /usr/local/bin/k3s-uninstall.sh
     }
     else {
-        Write-Error "k3s-uninstall.sh not found"
+        Write-Err "k3s-uninstall.sh not found"
     }
     exit 0
 }
@@ -48,7 +67,7 @@ Write-Host "Executing command: $command"
 # execute the command in bash
 bash -c $command
 if (-not $?) {
-    Write-Error "Failed to install k3s server: $_"
+    Write-Err "Failed to install k3s server: $_"
     exit 1
 }
 # setup credentials
@@ -62,7 +81,7 @@ cat /etc/rancher/k3s/k3s.yaml
 
 # Getting the agent token
 $agentToken = cat -Path "/var/lib/rancher/k3s/server/agent-token"
-echo "Agent token: $agentToken"
+Write-Log "Agent token: $agentToken"
 $env:AGENT_TOKEN = $agentToken
 
 return $agentToken
