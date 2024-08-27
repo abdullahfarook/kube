@@ -46,7 +46,7 @@ if ($uninstall -eq $true) {
 # Write-Log "Systemd daemon reloaded successfully"
 # $command = "curl -sfL https://get.k3s.io | K3S_URL=https://$($server_ip):6443 K3S_TOKEN=$token sh -"
 $command = "curl -sfL https://get.k3s.io | K3S_URL=https://$($server_ip):6443 K3S_TOKEN=$token sh -"
-Start-Process -NoNewWindow -FilePath "sudo" -ArgumentList -FilePat -Wait
+Start-Process -NoNewWindow -FilePath "sudo" -ArgumentList $command -Wait
 if (-not $?) {
     Write-Err "Failed to join the cluster: $_"
     exit 1
