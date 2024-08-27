@@ -10,7 +10,15 @@ function Write-Log {
         [string]$level = "INFO"
     )
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Write-Output "$timestamp [$level] $message"
+    if ($level -eq "ERR") {
+        Write-Host -NoNewline "$timestamp "
+        Write-Host -NoNewline "[$level] " -ForegroundColor Red
+        write-host  $message
+    }else{
+        Write-Host -NoNewline "$timestamp "
+        Write-Host -NoNewline "[$level] " -ForegroundColor Green
+        write-host  $message
+    }
 }
 
 $serviceFilePath = "/etc/systemd/system/k3s.service"

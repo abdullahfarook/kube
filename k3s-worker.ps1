@@ -15,9 +15,13 @@ function Write-Log {
     )
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     if ($level -eq "ERR") {
-        Write-Error "$timestamp [$level] $message"
+        Write-Host -NoNewline "$timestamp "
+        Write-Host -NoNewline "[$level] " -ForegroundColor Red
+        write-host  $message
     }else{
-        Write-Output "$timestamp [$level] $message"
+        Write-Host -NoNewline "$timestamp "
+        Write-Host -NoNewline "[$level] " -ForegroundColor Green
+        write-host  $message
     }
 }
 function Write-Err {
@@ -47,13 +51,6 @@ Write-Log "Joining the k3s cluster with command: $command"
 bash -c $command
 if (-not $?) {
     Write-Err "Failed to join the k3s cluster: $_"
-    exit 1
-}
-# verify the cluster
-Write-Log "Verifying the cluster..."
-kubectl get nodes
-if (-not $?) {
-    Write-Err "Failed to verify the cluster: $_"
     exit 1
 }
 
