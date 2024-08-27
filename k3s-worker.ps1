@@ -15,7 +15,7 @@ function Write-Log {
     )
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     if ($level -eq "ERR") {
-        Write-Err "$timestamp [$level] $message"
+        Write-Error "$timestamp [$level] $message"
     }else{
         Write-Output "$timestamp [$level] $message"
     }
