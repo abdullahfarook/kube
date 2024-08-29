@@ -1,22 +1,23 @@
+# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/configure-k3s.ps1)) -disable_traefik 0 -taint_server 1'"
 param (
     [bool]$disable_traefik = $true,
     [bool]$taint_server = $true
 )
 
-# Define a logging function
 function Write-Log {
     param (
         [string]$message,
-        [string]$level = "INFO"
+        [string]$level = "INF"
     )
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $timestamp = Get-Date -Format "HH:mm:ss"
     if ($level -eq "ERR") {
-        Write-Host -NoNewline "$timestamp "
-        Write-Host -NoNewline "[$level] " -ForegroundColor Red
+        Write-Host -NoNewline "[$timestamp "
+        Write-Host -NoNewline "$level] " -ForegroundColor Red
         write-host  $message
-    }else{
-        Write-Host -NoNewline "$timestamp "
-        Write-Host -NoNewline "[$level] " -ForegroundColor Green
+    }
+    else {
+        Write-Host -NoNewline "[$timestamp "
+        Write-Host -NoNewline "$level] " -ForegroundColor Green
         write-host  $message
     }
 }
@@ -30,38 +31,45 @@ if (-not (Test-Path $serviceFilePath)) {
 # Read the content of the service file
 $serviceFileContent = Get-Content -Path $serviceFilePath -Raw
 Write-Log "Read service file content successfully"
-# Disable traefik
-Write-Log "disable_traefik: $disable_traefik"
-if ($disable_traefik -eq $false) {
-    $serviceFileContent = $serviceFileContent -replace ' --disable traefik', ''
-    Write-Log "Traefik disable flag removed"
+# Add flag below the line containing 'server \'
+[System.Collections.ArrayList]$lines = $serviceFileContent -split "`n"
+$serverFlagIndex = $lines.IndexOf(($lines | Where-Object { $_ -match "server \\" }));
+$serverContent = $serviceFileContent.Substring($serverFlagIndex);
+$flags = @{
+    '--disable_traefik' = [bool]$disable_traefik
+    '--taint_server' = [bool]$taint_server
+    # Add more flags here
 }
-else {
-    if($serviceFileContent -like '*--disable traefik*') {
-        Write-Log "Traefik disable flag already exists"
-    } else {
-        $serviceFileContent = $serviceFileContent -replace "'server' ", "'server' --disable traefik "
-        Write-Log "Traefik disable flag added"
-        
+
+# Loop through each flag in the $flags hashtable
+foreach ($flag in $flags.GetEnumerator()) {
+    $flagName = $flag.Key
+    $flagValue = $flag.Value
+
+    # Check if the flag already exists in the server content
+    $containsFlag = $serverContent.Contains($flagName)
+    if ($containsFlag -and $flagValue) {
+        Write-Log "$flagName flag already exists"
+    }
+
+    # Check if the flag exists but its value is different
+    if ($containsFlag -and (-not $flagValue)) {
+        $index = $lines.IndexOf(($lines | Where-Object { $_ -like "*$flagName*" }))
+        Write-Log "$flagName flag index: $index"
+        $lines.RemoveAt($index)
+        Write-Log "$flagName flag removed"
+    }
+
+    # Check if the flag doesn't exist and its value is true
+    if (-not $containsFlag -and $flagValue) {
+        $lines.Insert($serverFlagIndex + 1, "`t'$flagName' \")
+        Write-Log "Added '$flagName' flag"
     }
 }
-# Taint the server
-Write-Log "taint_server: $taint_server"
-if ($taint_server -eq $false) {
-    $serviceFileContent = $serviceFileContent -replace ' --node-taint CriticalAddonsOnly=true:NoExecute', ''
-    Write-Log "Server taint flag removed"
-}
-else
-{
-    if($serviceFileContent -like '*--node-taint CriticalAddonsOnly=true:NoExecute*') {
-        Write-Log "Server taint flag already exists"
-        
-    } else {
-        $serviceFileContent = $serviceFileContent -replace "'server' ", "'server' --node-taint CriticalAddonsOnly=true:NoExecute "
-        Write-Log "Server taint flag added"
-    }
-}
-# echo $serviceFileContent
+
+# Remove empty lines from the content
+$lines = $lines | Where-Object { $_ -ne "" }
+$serviceFileContent = $lines -join "`n"
 # Write the modified content back to the service file
 $serviceFileContent | Out-File -FilePath $serviceFilePath -Force
 # Reload the systemd daemon
