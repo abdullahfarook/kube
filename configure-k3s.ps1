@@ -1,4 +1,4 @@
-# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/configure-k3s.ps1)) -disable_traefik 0 -taint_server 1'"
+# sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/configure-k3s.ps1).Content)) -disable_traefik 0 -taint_server 0'"
 param (
     [bool]$disable_traefik = $true,
     [bool]$taint_server = $true
