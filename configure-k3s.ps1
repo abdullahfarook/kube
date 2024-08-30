@@ -36,8 +36,8 @@ Write-Log "Read service file content successfully"
 $serverFlagIndex = $lines.IndexOf(($lines | Where-Object { $_ -match "server \\" }));
 $serverContent = $serviceFileContent.Substring($serverFlagIndex);
 $flags = @{
-    '--disable_traefik' = [bool]$disable_traefik
-    '--taint_server' = [bool]$taint_server
+    '--disable traefik' = [bool]$disable_traefik
+    '--node-taint CriticalAddonsOnly=true:NoExecute' = [bool]$taint_server
     # Add more flags here
 }
 
