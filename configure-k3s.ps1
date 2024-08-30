@@ -55,7 +55,6 @@ foreach ($flag in $flags.GetEnumerator()) {
     # Check if the flag exists but its value is different
     if ($containsFlag -and (-not $flagValue)) {
         $index = $lines.IndexOf(($lines | Where-Object { $_ -like "*$flagName*" }))
-        Write-Log "$flagName flag index: $index"
         $lines.RemoveAt($index)
         Write-Log "$flagName flag removed"
     }
