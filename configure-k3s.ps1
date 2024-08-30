@@ -33,7 +33,7 @@ $serviceFileContent = Get-Content -Path $serviceFilePath -Raw
 Write-Log "Read service file content successfully"
 # Add flag below the line containing 'server \'
 [System.Collections.ArrayList]$lines = $serviceFileContent -split "`n"
-$serverFlagIndex = $lines.IndexOf(($lines | Where-Object { $_ -match "server \\" }));
+$serverFlagIndex = $lines.IndexOf(($lines | Where-Object { $_ -like "*server \*" }));
 $serverContent = $serviceFileContent.Substring($serverFlagIndex);
 $flags = @{
     '--disable traefik' = [bool]$disable_traefik
