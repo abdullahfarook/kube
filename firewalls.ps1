@@ -14,20 +14,24 @@ function Write-Log {
         write-host  $message
     }
 }
-# install firewall-cmd top open ports
+# Update package list
 apt update
-sudo apt-get --yes install firewalld
 
-Write-Log "Opening ports 8472, 10250, 51820, 51821, 5001, 6443"
-firewall-cmd --zone=public --add-port=8472/udp --permanent
-firewall-cmd --zone=public --add-port=10250/tcp --permanent
-firewall-cmd --zone=public --add-port=51820/udp --permanent
-firewall-cmd --zone=public --add-port=51821/udp --permanent
-firewall-cmd --zone=public --add-port=5001/tcp --permanent
-firewall-cmd --zone=public --add-port=6443/tcp --permanent
-firewall-cmd --zone=public --add-port=80/tcp --permanent
-firewall-cmd --zone=public --add-port=80/udp --permanent
-# firewall-cmd --permanent --zone=trusted --add-source=10.42.0.0/16
-# firewall-cmd --permanent --zone=trusted --add-source=10.43.0.0/16
-firewall-cmd --reload
-Write-Log "Firewall configured successfully"
+# Install ufw
+sudo apt-get --yes install ufw
+
+# Allow specific ports
+Write-Log "Allowing ports 8472, 10250, 51820, 51821, 5001, 6443, 80"
+sudo ufw allow 8472/udp
+sudo ufw allow 10250/tcp
+sudo ufw allow 51820/udp
+sudo ufw allow 51821/udp
+sudo ufw allow 5001/tcp
+sudo ufw allow 6443/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 80/udp
+
+# Enable ufw
+sudo ufw --force enable
+
+Write-Log "UFW configured successfully"

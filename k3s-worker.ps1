@@ -55,9 +55,9 @@ if (-not $?) {
 }
 
 # open firewall ports
-$command = "iex '& ([scriptblock]::Create((iwr $firewall_script)))'"
-Write-Log "Opening firewall ports with command: $command"
-iex $command
+# $command = "iex '& ([scriptblock]::Create((iwr $firewall_script)))'"
+# Write-Log "Opening firewall ports with command: $command"
+# iex $command
 
 # attach disk
 if ($attach_disk -eq $true) {
