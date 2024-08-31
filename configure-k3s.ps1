@@ -35,34 +35,46 @@ Write-Log "Read service file content successfully"
 [System.Collections.ArrayList]$lines = $serviceFileContent -split "`n"
 $serverFlagIndex = $lines.IndexOf(($lines | Where-Object { $_ -like "*server \*" }));
 $serverContent = $serviceFileContent.Substring($serverFlagIndex);
-$flags = @{
-    '--disable traefik' = [bool]$disable_traefik
-    '--node-taint CriticalAddonsOnly=true:NoExecute' = [bool]$taint_server
-    # Add more flags here
-}
 
+[System.Collections.ArrayList]$flags = @(
+    @{
+        Key =   [string]    "--disable"
+        Value = [string]    "traefik"
+        Input = [bool]      $disable_traefik
+    },
+    @{
+        Key =   [string]    "--node-taint"
+        Value = [string]    "CriticalAddonsOnly=true:NoExecute"
+        Input = [bool]      $taint_server
+    }
+)
 # Loop through each flag in the $flags hashtable
 foreach ($flag in $flags.GetEnumerator()) {
-    $flagName = $flag.Key
+    $flagKey = $flag.Key
     $flagValue = $flag.Value
+    $flagInput = $flag.Input
+    $flagName  = $flagKey + " " + $flagValue
 
     # Check if the flag already exists in the server content
-    $containsFlag = $serverContent.Contains($flagName)
-    if ($containsFlag -and $flagValue) {
-        Write-Log "$flagName flag already exists"
+    $containsFlag = $serverContent.Contains($flagValue)
+    if ($containsFlag -and $flagInput) {
+        Write-Log "$flagName already exists"
     }
 
     # Check if the flag exists but its value is different
-    if ($containsFlag -and (-not $flagValue)) {
-        $index = $lines.IndexOf(($lines | Where-Object { $_ -like "*$flagName*" }))
+    if ($containsFlag -and (-not $flagInput)) { 
+        Write-Log "Removing flag $flagName"
+        $index = $lines.IndexOf(($lines | Where-Object { $_ -like "*$flagValue*" }))
+        Write-Log "$flag flag index: $index"
         $lines.RemoveAt($index)
-        Write-Log "$flagName flag removed"
+        $lines.RemoveAt($index-1)
     }
 
     # Check if the flag doesn't exist and its value is true
-    if (-not $containsFlag -and $flagValue) {
-        $lines.Insert($serverFlagIndex + 1, "`t'$flagName' \")
-        Write-Log "Added '$flagName' flag"
+    if (-not $containsFlag -and $flagInput) {
+        Write-Log "Adding flag $flagName"
+        $lines.Insert($serverFlagIndex + 1, "`t'$flagKey' \")
+        $lines.Insert($serverFlagIndex + 2, "`t'$flagValue' \")
     }
 }
 
