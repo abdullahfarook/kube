@@ -8,8 +8,8 @@ controller:
     enabled: false
   publishService:
     enabled: false
-  # metrics:
-  #   enabled: true
+  metrics:
+    enabled: true
   #   serviceMonitor:
   #     enabled: true
   config:
