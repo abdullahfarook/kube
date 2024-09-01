@@ -22,6 +22,27 @@ function Write-Log {
     }
 }
 
+function  Invoke-Operations {
+    Param(
+        [string]$flagName,
+        [bool]$flagInput
+    )
+
+    if ($flagName -eq "CriticalAddonsOnly=true:NoExecute" -and $flagInput) {
+        Write-Log "Tainting control place with $flagName"
+        $nodes = kubectl get nodes --selector='node-role.kubernetes.io/control-plane' -o jsonpath='{.items[*].metadata.name}'
+        foreach ($node in $nodes) {
+            kubectl taint nodes $node CriticalAddonsOnly=true:NoExecute
+        }
+    } elseif ($flagName -eq "CriticalAddonsOnly=true:NoExecute" -and $flagInput -eq $false) {
+        write-Log "Removing taint $flagname from control plane"
+        $nodes = kubectl get nodes --selector='node-role.kubernetes.io/control-plane' -o jsonpath='{.items[*].metadata.name}'
+        foreach ($node in $nodes) {
+            kubectl taint nodes $node CriticalAddonsOnly-
+        }
+    }
+}
+
 $serviceFilePath = "/etc/systemd/system/k3s.service"
 
 if (-not (Test-Path $serviceFilePath)) {
@@ -76,6 +97,8 @@ foreach ($flag in $flags.GetEnumerator()) {
         $lines.Insert($serverFlagIndex + 1, "`t'$flagKey' \")
         $lines.Insert($serverFlagIndex + 2, "`t'$flagValue' \")
     }
+
+    Invoke-Operations -flagName $flagValue -flagInput $flagInput
 }
 
 # Remove empty lines from the content
@@ -88,4 +111,4 @@ Start-Process -NoNewWindow -FilePath "sudo" -ArgumentList "systemctl daemon-relo
 Write-Log "Systemd daemon reloaded successfully"
 # # Restart the k3s service
 Start-Process -NoNewWindow -FilePath "sudo" -ArgumentList "systemctl restart k3s" -Wait
-Write-Log "k3s service restarted successfully"
+Write-Log "k3s service restarted successfully" 
