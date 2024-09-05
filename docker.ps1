@@ -1,4 +1,7 @@
 # sudo pwsh -Command "iex '& ([scriptblock]::Create((iwr https://raw.githubusercontent.com/abdullahfarook/kube/main/docker.ps1)))'"
+param(
+    [bool]$uninstall = $false
+)
 function Write-Log {
     param (
         [string]$message,
@@ -21,6 +24,19 @@ function Write-Err {
     )
     Write-Log $message "ERR"
     exit 1
+}
+if ($uninstall -eq $true) {
+    Write-Log "Uninstalling docker..."
+    apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli docker-compose-plugin
+    apt-get autoremove -y --purge docker-engine docker docker.io docker-ce docker-compose-plugin
+    rm -rf /var/lib/docker /etc/docker
+    rm /etc/apparmor.d/docker
+    groupdel docker
+    rm -rf /var/run/docker.sock
+    rm -rf /var/lib/containerd
+    rm -r ~/.docker
+    Write-Log "Docker uninstalled successfully"
+    exit 0
 }
 apt update
 apt --yes --no-install-recommends install apt-transport-https ca-certificates curl software-properties-common
