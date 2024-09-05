@@ -44,5 +44,6 @@ wget --quiet --output-document=- https://download.docker.com/linux/ubuntu/gpg | 
 add-apt-repository --yes "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable"
 apt update
 apt --yes install docker-ce
+usermod -aG docker $USER
 systemctl enable docker
 Write-Log "Docker installed successfully"
