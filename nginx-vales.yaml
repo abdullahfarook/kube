@@ -18,6 +18,7 @@ controller:
   ingressClassResource:
     default: true
   watchIngressWithoutClass: true
+  allowSnippetAnnotations: true
   tolerations:
     - key: CriticalAddonsOnly
       operator: Exists
