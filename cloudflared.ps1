@@ -5,10 +5,12 @@
 # Create a Tunnel
 # Tunnels > Create Tunnel > Select Cloudflared > Tunnel Name > Token
 
-# Step 2: Install Cloudflared on Kubernetes cluster server
+# Step 2(a): Install Cloudflared on Kubernetes cluster server
 # Use token to setup tunnel on Kubernetes cluster server
 # sudo nerdctl run --network host -d --restart unless-stopped --name cloudflared cloudflare/cloudflared:latest tunnel --no-autoupdate run --token <token>
 
+# Step 2(b): Install Cloudflared CLI on Kubernetes cluster server
+# cloudflared tunnel create kube --url tcp://localhost:6443
 
 # Step 3: Setup public hostname on tunnel
 # Click on service Type: HTTPS
@@ -57,10 +59,11 @@
 # cloudflared tunnel login
 
 # Step 7: Access Kubernetes cluster
-# cloudflared tunnel create kube --url tcp://localhost:6443
+# cloudflared access tcp --hostname kube.metaphorltd.com --url localhost:6443
+
 
 # Step 8: Access SSH using MobaXterm
-# Hostname: kube.metaphorltd.com
+# Hostname: ssh.metaphorltd.com
 # Port: 22
 # Username: <username>
 # Network Settings:
